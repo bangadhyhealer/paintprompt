@@ -1,0 +1,215 @@
+<!DOCTYPE html><html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PaintPrompt.AI - Generator Prompt Video Melukis</title>
+  <style>
+    :root {
+      --primary: #6a5acd;
+      --secondary: #f9f9f9;
+      --accent: #ffe599;
+      --text: #333;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background-color: var(--secondary);
+      color: var(--text);
+      padding: 20px;
+    }
+    .container {
+      max-width: 720px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: var(--primary);
+    }
+    label {
+      margin-top: 12px;
+      display: block;
+      font-weight: 600;
+    }
+    textarea, select, button, input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+    button {
+      background-color: var(--primary);
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #5848c2;
+    }
+    .output {
+      margin-top: 20px;
+      padding: 15px;
+      background: #eef6ff;
+      border-left: 4px solid var(--primary);
+      border-radius: 10px;
+      white-space: pre-wrap;
+    }
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 14px;
+      color: #999;
+    }
+    .preset-btn {
+      background-color: #ffa500;
+      margin-top: 10px;
+    }
+    .preset-btn:hover {
+      background-color: #e69500;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎨 PaintPrompt.AI</h1>
+    <p style="text-align:center">Buat prompt video melukis yang sinematik, logis, dan visual.</p><label for="language">Bahasa output:</label>
+<select id="language">
+  <option value="id">Bahasa Indonesia</option>
+  <option value="en">English</option>
+</select>
+
+<label for="scene">Deskripsi adegan melukis:</label>
+<textarea id="scene" rows="4" placeholder="Contoh: Seorang anak melukis pelangi di atas bukit setelah hujan..."></textarea>
+
+<label for="style">Gaya lukisan:</label>
+<select id="style">
+  <option value="impresionis">Impresionis</option>
+  <option value="klasik">Klasik Realistis</option>
+  <option value="modern">Modern Abstrak</option>
+  <option value="digital">Digital Painting</option>
+  <option value="cat air">Cat Air Tradisional</option>
+  <option value="sketsa pensil">Sketsa Pensil</option>
+  <option value="gouache">Gouache</option>
+  <option value="lukisan tinta">Lukisan Tinta Cina / Kaligrafi</option>
+  <option value="lukisan pasir">Lukisan Pasir (Sand Art)</option>
+  <option value="grafiti">Street Art / Grafiti</option>
+</select>
+<input type="text" id="styleCustom" placeholder="Atau tulis gaya sendiri...">
+
+<label for="time">Waktu / suasana:</label>
+<select id="time">
+  <option value="pagi berkabut">Pagi berkabut</option>
+  <option value="senja">Senja / matahari terbenam</option>
+  <option value="malam berbintang">Malam berbintang</option>
+  <option value="hujan ringan">Hujan ringan</option>
+  <option value="siang cerah">Siang terang cerah</option>
+  <option value="fajar">Fajar (early morning)</option>
+  <option value="setelah hujan">Setelah hujan</option>
+  <option value="berawan">Berawan</option>
+  <option value="berkabut tebal">Berkabut tebal</option>
+  <option value="dalam ruangan">Penerangan dalam ruangan (studio)</option>
+</select>
+<input type="text" id="timeCustom" placeholder="Atau tulis suasana sendiri...">
+
+<label for="format">Format visual video:</label>
+<select id="format">
+  <option value="animasi 3D semi-realistis">Animasi 3D semi-realistis</option>
+  <option value="gaya dokumenter">Gaya dokumenter</option>
+  <option value="lukisan hidup">Gaya lukisan hidup (painterly motion)</option>
+  <option value="dokumenter bergaya vintage">Dokumenter gaya vintage</option>
+  <option value="slow-motion dramatis">Slow-motion dramatis</option>
+  <option value="timelapse artistik">Timelapse artistik</option>
+  <option value="2D animasi gaya tangan">2D animasi gaya tangan</option>
+  <option value="gaya film puitis">Gaya film puitis eksperimental</option>
+</select>
+<input type="text" id="formatCustom" placeholder="Atau tulis format sendiri...">
+
+<button onclick="generatePrompt()">✨ Buat Prompt</button>
+<button class="preset-btn" onclick="loadContohRinjani()">🖼️ Gunakan Contoh: Melukis Gunung Rinjani</button>
+
+<div class="output" id="resultPrompt"></div>
+
+<button style="background:#2ecc71; margin-top: 10px;" onclick="copyPrompt()">📋 Salin Prompt</button>
+<button style="background:#e74c3c; margin-top: 10px;" onclick="resetForm()">🔄 Reset Form</button>
+
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-top: 30px;">
+  <a href="https://wa.me/6281936034285" target="_blank" style="flex: 1; text-decoration: none;">
+    <button style="width: 100%; background-color: transparent; color: #25D366; padding: 10px; border: 2px solid #25D366; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px;">
+      <img src="https://cdn-icons-png.flaticon.com/24/733/733585.png" width="18" height="18" alt="WA"> WhatsApp
+    </button>
+  </a>
+  <a href="https://www.tiktok.com/@bang.adhyhealer" target="_blank" style="flex: 1; text-decoration: none;">
+    <button style="width: 100%; background-color: transparent; color: #000; padding: 10px; border: 2px solid #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px;">
+      <img src="https://cdn-icons-png.flaticon.com/24/3046/3046121.png" width="18" height="18" alt="TikTok"> TikTok
+    </button>
+  </a>
+</div>
+<!-- ... konten sebelumnya ... -->
+
+<!-- Tombol sosial -->
+<div style="display: flex; justify-content: space-between; ..."></div>
+
+<!-- Tetap tampilkan footer -->
+<div class="footer">&copy; 2025 PaintPrompt.AI — Dibuat Oleh Bang Adhy untuk kreator AI video</div>
+<script>
+    function generatePrompt() {
+      const scene = document.getElementById('scene').value.trim();
+      let style = document.getElementById('styleCustom').value.trim() || document.getElementById('style').value;
+      let time = document.getElementById('timeCustom').value.trim() || document.getElementById('time').value;
+      let format = document.getElementById('formatCustom').value.trim() || document.getElementById('format').value;
+      const language = document.getElementById('language').value;
+
+      if (!scene) {
+        document.getElementById('resultPrompt').innerText = 'Deskripsi adegan belum diisi.';
+        return;
+      }
+
+      let prompt = '';
+
+      if (language === 'id') {
+        prompt = `Adegan: ${scene}\n\nFormat visual: ${format}\nGaya lukisan: ${style}, suasana: ${time}.\nDetail visual: komposisi sinematik, fokus pada ekspresi wajah, gerakan kuas, dan latar belakang.\nKamera: close-up, dolly shot pelan, aerial view jika relevan.\nAudio: musik instrumental lembut, ambient alami (angin, burung, tetesan air jika hujan).`;
+      } else {
+        prompt = `Scene: ${scene}\n\nVisual format: ${format}\nPainting style: ${style}, atmosphere: ${time}.\nVisual details: cinematic composition, focus on facial expressions, brush movement, and background.\nCamera: close-up, slow dolly shots, aerial view if relevant.\nAudio: soft instrumental music, natural ambient sounds (wind, birds, water drops if raining).`;
+      }
+
+      document.getElementById('resultPrompt').innerText = prompt;
+    }
+
+    function copyPrompt() {
+      const output = document.getElementById("resultPrompt").innerText;
+      if (!output) return;
+      navigator.clipboard.writeText(output).then(() => {
+        alert("Prompt berhasil disalin!");
+      });
+    }
+
+    function resetForm() {
+      document.getElementById('scene').value = "";
+      document.getElementById('style').selectedIndex = 0;
+      document.getElementById('time').selectedIndex = 0;
+      document.getElementById('format').selectedIndex = 0;
+      document.getElementById('styleCustom').value = "";
+      document.getElementById('timeCustom').value = "";
+      document.getElementById('formatCustom').value = "";
+      document.getElementById('language').selectedIndex = 0;
+      document.getElementById('resultPrompt').innerText = "";
+    }
+
+    function loadContohRinjani() {
+      const language = document.getElementById('language').value;
+      let prompt = '';
+      if (language === 'id') {
+        prompt = `Seorang pria memakai topi lebar dan baju outdoor sedang melukis di alam terbuka. Lokasi berada di puncak Gunung Rinjani dengan latar gunung, danau Segara Anak, dan langit biru cerah. Kamera memperlihatkan tangan pria itu sedang melukis di kanvas, dan lukisan di atas kanvas menunjukkan pemandangan yang sama persis dengan latar belakang aslinya — lengkap dengan bentuk danau, kontur pegunungan, dan warna langit. Gaya sinematik realistik, pencahayaan alami pagi hari. Teknik kamera meliputi close-up kuas, medium shot dari samping, dan over-the-shoulder. Musik instrumental tenang dan suara angin pegunungan mengiringi.`;
+      } else {
+        prompt = `A man wearing a wide-brimmed hat and outdoor clothes is painting in the open air. The location is on the peak of Mount Rinjani, featuring a background of mountains, the Segara Anak lake, and a clear blue sky. The camera captures his hand painting on canvas, and the painting on the canvas exactly mirrors the real landscape — including the lake shape, mountain contours, and sky colors. Cinematic realistic style with natural morning light. Camera techniques include close-up of the brush, medium side shot, and over-the-shoulder. Soft instrumental music and mountain breeze accompany the scene.`;
+      }
+      document.getElementById('resultPrompt').innerText = prompt;
+    }
+  </script></body>
+</html>
